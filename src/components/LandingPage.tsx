@@ -12,7 +12,9 @@ import {
   CheckCircle2,
   Cpu,
   BarChart3,
-  Loader2
+  Loader2,
+  MessageSquare,
+  Key
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -23,7 +25,41 @@ interface LandingPageProps {
 export default function LandingPage({ onAuthenticated }: LandingPageProps) {
   const [isConnecting, setIsConnecting] = useState(false);
 
+  // Autonomous AB-Testing Engine State
+  const [activeVariant, setActiveVariant] = useState(0);
+
+  const heroVariants = [
+    {
+      badge: "The Agentic AI Manager for Gumroad",
+      headline: <>Converse with your <br /><span className="text-primary italic">Business Data.</span></>,
+      subhead: "Turn conversations into revenue growth. Gumfolio lets you talk to your store, develop strategies, and command your Agentic AI to manage everything from offers to license keys."
+    },
+    {
+      badge: "Self-Optimizing Commerce",
+      headline: <>Run your store <br /><span className="text-primary italic">on Autopilot.</span></>,
+      subhead: "Stop managing, start commanding. Our Autonomous Agents run A/B tests, manage churn, and grow your Gumroad revenue while you sleep."
+    },
+    {
+      badge: "Next-Gen Revenue Ops",
+      headline: <>Don't just track sales. <br /><span className="text-primary italic">Command them.</span></>,
+      subhead: "Deploy highly specialized AI agents to monitor your metrics and automatically execute growth strategies. The first autonomous platform for digital creators."
+    }
+  ];
+
   useEffect(() => {
+    // AB-Testing Assignment
+    const savedVariant = localStorage.getItem('ab_test_variant');
+    if (savedVariant) {
+      setActiveVariant(parseInt(savedVariant));
+    } else {
+      const assigned = Math.floor(Math.random() * heroVariants.length);
+      localStorage.setItem('ab_test_variant', assigned.toString());
+      setActiveVariant(assigned);
+    }
+    
+    // Simulate logging impression
+    console.log(`[AB Agent] Impression logged for variant ${activeVariant}`);
+
     if (gumroadService.getToken()) {
       onAuthenticated();
     }
@@ -62,6 +98,13 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
 
   const handleConnect = async () => {
     setIsConnecting(true);
+    
+    // Log conversion for AB-Testing Agent
+    console.log(`[AB Agent] Conversion logged for variant ${activeVariant}`);
+    const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '{}');
+    conversions[activeVariant] = (conversions[activeVariant] || 0) + 1;
+    localStorage.setItem('ab_conversions', JSON.stringify(conversions));
+
     try {
       const response = await fetch('/api/auth/url');
       if (!response.ok) {
@@ -116,19 +159,19 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
       {/* Hero Section */}
       <section className="relative z-10 pt-20 pb-32 px-6 max-w-7xl mx-auto text-center">
         <motion.div
+          key={activeVariant} // Force re-animation on variant change if testing
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <span className="inline-block px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-label font-bold uppercase tracking-[0.2em] mb-6">
-            The Only Dedicated 3rd Party App for Gumroad
+            {heroVariants[activeVariant].badge}
           </span>
           <h1 className="text-6xl md:text-8xl font-headline font-extrabold tracking-tighter mb-8 leading-[0.9]">
-            Effortless <br />
-            <span className="text-primary italic">Gumroad</span> Management.
+            {heroVariants[activeVariant].headline}
           </h1>
           <p className="text-on-surface-variant text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-body leading-relaxed">
-            Stop wrestling with complex dashboards. Gumfolio brings your entire business into a high-performance, mobile-first interface powered by Agentic AI.
+            {heroVariants[activeVariant].subhead}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -160,18 +203,18 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
               <Bot className="w-10 h-10" />
             </div>
             <h2 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">
-              Your Business, <br />
-              <span className="text-primary">AI-Optimized.</span>
+              Talk strategy. <br />
+              <span className="text-primary">Watch it execute.</span>
             </h2>
             <p className="text-on-surface-variant text-lg font-body leading-relaxed">
-              Meet your new Agentic AI business manager. Gumfolio doesn't just show data—it understands it. Ask questions, predict sales trends, and automate repetitive tasks with natural language.
+              Your store is no longer just a dashboard. It's a dialogue. Ask your AI to uncover insights, manage your active subscribers, or automatically spin up new product variants and promotional offers based on performance data.
             </p>
             <ul className="space-y-4">
               {[
-                "Predictive Sales Analytics",
-                "Automated Customer Support Drafts",
-                "Inventory Trend Detection",
-                "Natural Language Business Queries"
+                "Revenue Strategy Generation",
+                "Automated Offer & Variant Creation",
+                "License Key & Subscriber Management",
+                "Natural Language Store Control"
               ].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-on-surface font-label font-semibold">
                   <Cpu className="w-5 h-5 text-primary" />
@@ -196,12 +239,12 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
               <div className="space-y-6">
                 <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
                   <p className="text-xs text-primary font-label uppercase tracking-widest mb-2">User Query</p>
-                  <p className="text-sm text-on-surface italic">"How are my digital assets performing compared to last month?"</p>
+                  <p className="text-sm text-on-surface italic">"How can we boost revenue for the Design System this weekend?"</p>
                 </div>
                 <div className="bg-primary/5 p-4 rounded-xl border border-primary/20">
                   <p className="text-xs text-primary font-label uppercase tracking-widest mb-2">AI Response</p>
                   <p className="text-sm text-on-surface leading-relaxed">
-                    Your digital assets are up <span className="text-primary font-bold">24%</span> in volume. However, your conversion rate on "Pro Design Pack" has dipped by 5%. I recommend updating the thumbnail to improve CTR.
+                    I see <span className="text-primary font-bold">142 active subscribers</span> on the basic tier. I can create a new <span className="text-primary font-bold">'Pro Variant'</span> and generate a 20% weekend <span className="text-primary font-bold">offer code</span> for them. Should I execute this strategy?
                   </p>
                 </div>
               </div>
@@ -216,24 +259,24 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
       {/* Features Grid */}
       <section id="features" className="relative z-10 py-32 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-headline font-bold mb-6">Built for High-Performance Creators</h2>
-          <p className="text-on-surface-variant max-w-2xl mx-auto text-lg">The only 3rd party application designed from the ground up to make Gumroad management effortless.</p>
+          <h2 className="text-4xl md:text-5xl font-headline font-bold mb-6">Store Management by Conversation</h2>
+          <p className="text-on-surface-variant max-w-2xl mx-auto text-lg">Stop clicking through menus. Develop strategies and execute them instantly through natural dialogue.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard 
+            icon={<MessageSquare className="w-8 h-8" />}
+            title="Strategic Dialogues"
+            description="Chat with your store's data to uncover hidden revenue opportunities, identify churn risks among subscribers, and formulate growth plans."
+          />
+          <FeatureCard 
             icon={<Zap className="w-8 h-8" />}
-            title="Instant Actions"
-            description="Refund sales, resend receipts, and mark physical products as shipped with a single tap. No more digging through menus."
+            title="Agentic Execution"
+            description="Your AI doesn't just give advice; it takes action. Command it to create limited-time offers, set up new variants, or manage product visibility instantly."
           />
           <FeatureCard 
-            icon={<BarChart3 className="w-8 h-8" />}
-            title="Advanced Analytics"
-            description="Get editorial-grade insights into your sales velocity, revenue trends, and customer behavior."
-          />
-          <FeatureCard 
-            icon={<Smartphone className="w-8 h-8" />}
-            title="Mobile First"
-            description="Designed exclusively for mobile. Manage your entire empire from the palm of your hand, anywhere in the world."
+            icon={<Key className="w-8 h-8" />}
+            title="Effortless Admin"
+            description="Subtly handle complex tasks like verifying, enabling, or rotating software license keys and manage subscriber access, entirely via AI requests."
           />
         </div>
       </section>

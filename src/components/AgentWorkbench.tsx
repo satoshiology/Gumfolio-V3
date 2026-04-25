@@ -28,7 +28,7 @@ export function AgentWorkbench() {
     {
       id: "1",
       name: "Gumfolio Strategist",
-      model: "gemini-3.1-flash-lite-preview",
+      model: "gemini-flash-latest",
       integrations: [
         { 
           id: "gumroad", 
@@ -37,6 +37,22 @@ export function AgentWorkbench() {
           tools: [
               { id: "refund", name: "Refund Sale", enabled: true },
               { id: "resendReceipt", name: "Resend Receipt", enabled: true }
+          ]
+        }
+      ]
+    },
+    {
+      id: "2",
+      name: "Autonomous AB-Tester",
+      model: "gemini-flash-latest",
+      integrations: [
+        {
+          id: "optimization",
+          name: "Conversion Engine",
+          enabled: true,
+          tools: [
+            { id: "landingPage", name: "Landing Page Variants", enabled: true },
+            { id: "checkout", name: "Checkout Flow", enabled: false }
           ]
         }
       ]
@@ -138,6 +154,38 @@ export function AgentWorkbench() {
         <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
             <div className="bg-surface-container rounded-2xl p-6 border border-white/10 w-full max-w-md max-h-[80vh] overflow-y-auto space-y-4">
                 <h2 className="text-xl font-bold text-white">Configure {modalAgent.name}</h2>
+                
+                {modalAgent.id === "2" && (
+                    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+                        <h3 className="text-white font-bold mb-2">Live A/B Test Variants (Landing Page)</h3>
+                        <div className="space-y-3">
+                            {[0, 1, 2].map(v => {
+                                const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '{}')[v] || 0;
+                                const impressions = conversions * Math.floor(Math.random() * 5 + 2); // Simulated impressions for demo
+                                const cr = impressions ? ((conversions / impressions) * 100).toFixed(1) : 0;
+                                return (
+                                    <div key={v} className="bg-black/50 p-2 rounded border border-white/5">
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span className="text-zinc-400">Variant {v}</span>
+                                            <span className="text-primary">{cr}% CR</span>
+                                        </div>
+                                        <div className="flex justify-between text-[10px] text-zinc-500">
+                                            <span>{impressions} Views</span>
+                                            <span>{conversions} Conv.</span>
+                                        </div>
+                                        <div className="w-full h-1 bg-zinc-800 rounded-full mt-2 overflow-hidden">
+                                            <div className="h-full bg-primary" style={{ width: `${cr}%` }}></div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <button className="w-full mt-3 p-2 bg-primary/20 text-primary text-xs font-bold rounded hover:bg-primary/30 transition-colors">
+                            Force Agent Re-Optimization
+                        </button>
+                    </div>
+                )}
+
                 {allIntegrations.map(intId => (
                   <div key={intId} className="flex justify-between items-center p-3 bg-zinc-900 rounded-lg">
                     <span className="text-white capitalize">{intId}</span>
