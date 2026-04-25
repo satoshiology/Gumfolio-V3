@@ -1,0 +1,451 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Plus Jakarta Sans", sans-serif;
+
+  /* Glassmorphic/Neumorphic Dark Palette */
+  --color-surface-dim: #0a0b0e;
+  --color-surface-container: #121419;
+  --color-surface-container-low: #1a1d24;
+  --color-surface-container-high: #252a33;
+  --color-surface-container-highest: #2d333e;
+  
+  --color-primary: #00ff41; /* Vibrant Green */
+  --color-primary-dim: #16a34a;
+  --color-secondary: #00e0ff; /* Neon highlight */
+  --color-on-surface: #e4e7ec;
+  --color-on-surface-variant: #9aa4b7;
+  
+  --radius-xl: 1.5rem;
+  --radius-xxl: 2rem;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-dim text-on-surface font-body transition-all duration-1000 ease-in-out;
+    background-image: radial-gradient(at 0% 0%, #1a1d24 0%, transparent 50%),
+                      radial-gradient(at 100% 100%, #121419 0%, transparent 50%);
+  }
+}
+
+/* ========================================================
+   PRO THEME: LUXURY GLASSMORPHIC & NEUMORPHIC OVERHAUL
+   ======================================================== */
+.pro-theme {
+  --color-surface-dim: #050505;
+  --color-surface-container: #0b0b0b;
+  --color-surface-container-low: #111111;
+  --color-surface-container-high: #1a1811;
+  --color-surface-container-highest: #242116;
+  
+  --color-primary: #a69a7c;
+  --color-primary-dim: #8a7f62;
+  --color-secondary: #a69a7c;
+  --color-on-surface: #fdfbf7;
+  --color-on-surface-variant: #b0aa9e;
+
+  --font-headline: "Playfair Display", serif;
+}
+
+.pro-theme body {
+  background-color: var(--color-surface-dim);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(166, 154, 124, 0.05), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(166, 154, 124, 0.03), transparent 50%);
+  position: relative;
+}
+
+/* Premium Hybrid Glass-Neumorphic Card */
+.pro-theme .glass-panel,
+.pro-theme .neuro-panel,
+.pro-theme .glass-card {
+  background: linear-gradient(145deg, #0d0d0d, #050505) !important;
+  box-shadow: 
+    8px 8px 20px #020202, 
+    -4px -4px 15px rgba(30, 30, 30, 0.4),
+    inset 0px 0px 0px 1px rgba(166, 154, 124, 0.15),
+    inset 0px 4px 10px rgba(166, 154, 124, 0.02) !important;
+  backdrop-filter: blur(20px);
+  border: none !important;
+  border-radius: var(--radius-xxl);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Sweeping Gold Shine on Hover */
+.pro-theme .glass-panel::after,
+.pro-theme .neuro-panel::after,
+.pro-theme .glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 50%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(166, 154, 124, 0.1), transparent);
+  transform: skewX(-25deg);
+  transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+}
+
+.pro-theme .glass-panel:hover::after,
+.pro-theme .neuro-panel:hover::after,
+.pro-theme .glass-card:hover::after {
+  left: 200%;
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Pro Text Enhancements */
+.pro-theme .neon-text-glow {
+  text-shadow: 0 0 20px rgba(166, 154, 124, 0.5), 0 0 40px rgba(166, 154, 124, 0.2) !important;
+  color: #a69a7c !important;
+  letter-spacing: -0.02em;
+}
+
+.pro-theme h1, .pro-theme h2, .pro-theme h3 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+}
+
+/* Top & Bottom Bar Pro Overrides */
+.pro-theme header {
+  background: rgba(5, 5, 5, 0.8) !important;
+  border-bottom: 1px solid rgba(166, 154, 124, 0.2) !important;
+  box-shadow: 0 4px 30px rgba(166, 154, 124, 0.05) !important;
+}
+
+.pro-theme nav {
+  background: rgba(10, 10, 10, 0.9) !important;
+  border-top: 1px solid rgba(166, 154, 124, 0.2) !important;
+  box-shadow: 0 -10px 40px rgba(166, 154, 124, 0.08) !important;
+}
+
+/* PRO DASH Button Overrides */
+.pro-theme .ai-space-btn {
+  background-image: linear-gradient(#050505, #050505),
+    linear-gradient(
+      137.48deg,
+      #a69a7c 10%,
+      #8a7f62 45%,
+      #d6ccb2 67%,
+      #a69a7c 87%
+    );
+  animation: gradient_301 5s ease infinite, alert_pulse_pro 2s infinite;
+}
+
+.pro-theme .ai-space-btn .btn-icon {
+  filter: invert(1) drop-shadow(0 0 6px #a69a7c);
+}
+
+.pro-theme .ai-space-btn:hover .container-stars {
+  background-color: #0b0802;
+}
+
+.pro-theme .ai-space-btn:active {
+  border: double 4px #a69a7c;
+}
+
+.pro-theme .ai-space-btn:active .circle {
+  background: #a69a7c;
+}
+
+.pro-theme .ai-space-btn .circle:nth-of-type(1) {
+  background: rgba(166, 154, 124, 0.6);
+}
+
+.pro-theme .ai-space-btn .circle:nth-of-type(2) {
+  background: rgba(214, 204, 178, 0.6);
+}
+
+.pro-theme .ai-space-btn .stars::after,
+.pro-theme .ai-space-btn .stars::before {
+  background-image: radial-gradient(rgba(166, 154, 124, 0.8) 1px, transparent 1%);
+}
+
+@keyframes alert_pulse_pro {
+  0% { box-shadow: 0 0 0 0 rgba(166, 154, 124, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(166, 154, 124, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(166, 154, 124, 0); }
+}
+
+/* Neumorphic Button */
+.neuro-button {
+  background: var(--color-surface-container);
+  border-radius: 12px;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.4), 
+    -4px -4px 8px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.button {
+  --black: #000000;
+  --ch-black: #141414;
+  --eer-black: #1b1b1b;
+  --night-rider: #d8b270;
+  --white: #d8b270;
+  --af-white: #d8b270;
+  --ch-white: #e1e1e1;
+  border-radius: 8px;
+  width: 140px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0px 15px;
+  border: none;
+  color: #d8b270;
+  position: relative;
+  cursor: pointer;
+  font-weight: 700;
+  transition-duration: .2s;
+  background-color: var(--ch-black);
+}
+
+.button:before, .button:after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  border-radius: 10px;
+  background: linear-gradient(45deg, 
+  var(--ch-black), var(--eer-black),
+  var(--night-rider), var(--ch-white), var(--night-rider), 
+	var(--eer-black), var(--ch-black),var(--ch-black));
+  background-size: 400%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: -1;
+  animation: steam 20s linear infinite;
+}
+
+@keyframes steam {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button:after {
+  filter: blur(50px);
+}
+
+.neuro-button:hover {
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.5), 
+    -6px -6px 12px rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-container-low);
+}
+
+.neuro-button:active {
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.4), 
+    inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+  transform: scale(0.98);
+}
+
+.pro-theme .neuro-button {
+  background: #0d0d0d;
+  box-shadow: 
+    6px 6px 12px #020202, 
+    -4px -4px 10px rgba(166, 154, 124, 0.05);
+  border: 1px solid rgba(166, 154, 124, 0.1);
+}
+
+.pro-theme .neuro-button:hover {
+  background: #111111;
+  box-shadow: 
+    8px 8px 16px #010101, 
+    -6px -6px 12px rgba(166, 154, 124, 0.08);
+}
+
+.pro-theme .neuro-button:active {
+  box-shadow: 
+    inset 4px 4px 8px #000000, 
+    inset -4px -4px 8px rgba(166, 154, 124, 0.05);
+}
+
+/* Base App Elements */
+.glass-panel {
+  @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)];
+}
+
+.neuro-panel {
+  @apply bg-surface-container rounded-3xl shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(50,55,70,0.2)] border border-white/5;
+}
+
+/* AI Space Button */
+.ai-space-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  background-size: 300% 300%;
+  cursor: pointer;
+  backdrop-filter: blur(1rem);
+  border-radius: 50%;
+  transition: 0.5s;
+  animation: gradient_301 5s ease infinite, alert_pulse 2s infinite;
+  border: double 4px transparent;
+  background-image: linear-gradient(#000000, #000000),
+    linear-gradient(
+      137.48deg,
+      #FF00FF 10%,
+      #00FFFF 45%,
+      #FFFF00 67%,
+      #00FF41 87%
+    );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  position: relative;
+}
+
+.ai-space-btn .container-stars {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: 0.5s;
+  backdrop-filter: blur(1rem);
+  border-radius: 50%;
+}
+
+.ai-space-btn .btn-icon {
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  filter: invert(1) drop-shadow(0 0 6px #00ff41);
+  pointer-events: none;
+}
+
+.ai-space-btn .glow {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.ai-space-btn .circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  filter: blur(2rem);
+  animation: pulse_3011 4s infinite;
+  z-index: -1;
+}
+
+.ai-space-btn .circle:nth-of-type(1) {
+  background: rgba(255, 0, 255, 0.6);
+}
+
+.ai-space-btn .circle:nth-of-type(2) {
+  background: rgba(0, 255, 255, 0.6);
+}
+
+.ai-space-btn:hover .container-stars {
+  z-index: 1;
+  background-color: #021104;
+}
+
+.ai-space-btn:hover {
+  transform: scale(1.1);
+}
+
+.ai-space-btn:active {
+  border: double 4px #00ff41;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: none;
+}
+
+.ai-space-btn:active .circle {
+  background: #00ff41;
+}
+
+.ai-space-btn .stars {
+  position: relative;
+  background: transparent;
+  width: 200rem;
+  height: 200rem;
+}
+
+.ai-space-btn .stars::after {
+  content: "";
+  position: absolute;
+  top: -10rem;
+  left: -100rem;
+  width: 100%;
+  height: 100%;
+  animation: animStarRotate 90s linear infinite;
+  background-image: radial-gradient(rgba(0, 255, 65, 0.8) 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+.ai-space-btn .stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 170%;
+  height: 500%;
+  animation: animStar 60s linear infinite;
+  background-image: radial-gradient(rgba(0, 255, 65, 0.8) 1px, transparent 1%);
+  background-size: 50px 50px;
+  opacity: 0.5;
+}
+
+@keyframes alert_pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 255, 65, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
+}
+
+@keyframes animStar {
+  from { transform: translateY(0); }
+  to { transform: translateY(-135rem); }
+}
+
+@keyframes animStarRotate {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
+}
+
+@keyframes gradient_301 {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse_3011 {
+  0% { transform: scale(0.75); }
+  70% { transform: scale(1); }
+  100% { transform: scale(0.75); }
+}
+
+/* Global scrollbar hiding */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

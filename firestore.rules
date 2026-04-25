@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definitions
+    function isSignedIn() { return request.auth != null; }
+    function isVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Validation Helpers
+    function isValidUser(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.email is string && data.email.matches('^[^@]+@[^@]+\\.[^@]+$');
+    }
+
+    function isValidProduct(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.price is number && data.price >= 0 && data.price < 1000000; // Cap to prevent wallet abuse
+    }
+
+    function isValidSale(data) {
+        return data.id is string && data.id.size() <= 128 &&
+               data.email is string && data.email.matches('^[^@]+@[^@]+\\.[^@]+$') &&
+               data.product_id is string && isValidId(data.product_id) &&
+               data.price is number && data.price >= 0;
+    }
+
+    function isValidMessage(data) {
+      return data.role in ['user', 'assistant'] &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 10000 &&
+             data.createdAt is timestamp;
+    }
+
+    // MATCH BLOCKS
+    match /users/{userId} {
+      allow get: if isVerified() && request.auth.uid == userId;
+      allow create: if isVerified() && request.auth.uid == userId && isValidUser(incoming()) && incoming().id == userId;
+      allow update: if isVerified() && request.auth.uid == userId && isValidUser(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'bio', 'profile_picture_url', 'url']) && incoming().id == existing().id;
+      
+      match /products/{productId} {
+        allow list: if isVerified() && request.auth.uid == userId;
+        allow get: if isVerified() && request.auth.uid == userId;
+        allow create: if isVerified() && request.auth.uid == userId && isValidProduct(incoming()) && incoming().userId == userId;
+        allow update: if isVerified() && request.auth.uid == userId && isValidProduct(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'price', 'short_url']) && incoming().id == existing().id && incoming().userId == existing().userId;
+      }
+      
+      match /sales/{saleId} {
+        allow list: if isVerified() && request.auth.uid == userId;
+        allow get: if isVerified() && request.auth.uid == userId;
+        allow create: if isVerified() && request.auth.uid == userId && isValidSale(incoming()) && incoming().userId == userId && incoming().createdAt == request.time;
+        // Sales should be immutable once created
+      }
+      
+      match /chatHistory/{messageId} {
+        allow list: if isVerified() && request.auth.uid == userId;
+        allow get: if isVerified() && request.auth.uid == userId;
+        allow create: if isVerified() && request.auth.uid == userId && isValidMessage(incoming()) && incoming().userId == userId;
+      }
+    }
+  }
+}

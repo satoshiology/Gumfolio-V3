@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "bio": { "type": "string" },
+        "profile_picture_url": { "type": "string" },
+        "url": { "type": "string" }
+      },
+      "required": ["id", "name", "email"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product data from Gumroad",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "currency": { "type": "string" },
+        "short_url": { "type": "string" }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Sale data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "product_id": { "type": "string" },
+        "price": { "type": "number" }
+      },
+      "required": ["id", "email", "product_id"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Chat message",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["role", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User public profile"
+    },
+    "/users/{userId}/products/{productId}": {
+      "schema": "Product",
+      "description": "Products owned by the user"
+    },
+    "/users/{userId}/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Sales records"
+    },
+    "/users/{userId}/chatHistory/{messageId}": {
+      "schema": "Message",
+      "description": "User's chat history with the assistant"
+    }
+  }
+}
