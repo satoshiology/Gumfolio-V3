@@ -43,14 +43,20 @@ export function TopAppBar() {
       </div>
 
       <div className="flex-1 flex justify-center">
-        <a 
-          className="gumroad-button flex items-center gap-2 bg-gradient-to-r from-[#a69a7c] via-[#e1dccc] to-[#a69a7c] text-black px-4 py-1.5 rounded-full text-[10px] font-headline font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(166,154,124,0.4)] hover:shadow-[0_0_30px_rgba(166,154,124,0.6)] transition-all animate-pulse" 
-          href="https://store.gumfolio.xyz/l/pro"
-          data-gumroad-overlay-checkout="true"
+        <button 
+          onClick={() => window.open('https://pro.gumfolio.xyz', '_blank')}
+          type="button" 
+          className="btn-space"
         >
-          <Sparkles className="w-3 h-3" />
-          GO PRO
-        </a>
+          <strong>GO PRO</strong>
+          <div id="container-stars">
+            <div id="stars"></div>
+          </div>
+          <div id="glow">
+            <div className="circle"></div>
+            <div className="circle"></div>
+          </div>
+        </button>
       </div>
 
       <div className="flex items-center gap-2">
