@@ -1,9 +1,6 @@
 import express from "express";
-import { createServer as createViteServer } from "vite";
-import path from "path";
 import axios from "axios";
 import dotenv from "dotenv";
-import { WebSocketServer, WebSocket } from "ws";
 
 dotenv.config();
 
@@ -15,8 +12,9 @@ const agentIntegrations: { [key: string]: boolean } = {
     gumroad: true
 };
 
-async function startServer() {
-  const app = express();
+export const app = express();
+export function setupApp() {
+
   const PORT = 3000;
 
   app.use(express.json());
@@ -81,7 +79,7 @@ async function startServer() {
   }
 
   // The user specifically requested this exact redirect URI
-  const EXACT_REDIRECT_URI = "https://gumfolio-v13-520825105178.us-west1.run.app/";
+  const EXACT_REDIRECT_URI = process.env.APP_URL || process.env.URL || "https://gumfolio-v13-520825105178.us-west1.run.app/";
 
   // OAuth Routes
   app.get("/api/auth/url", (req, res) => {
@@ -508,52 +506,4 @@ async function startServer() {
     }
   });
   
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
   }
-
-  const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-
-  // WebSocket Proxy
-  const wss = new WebSocketServer({ server });
-  wss.on("connection", (ws) => {
-    console.log("Client connected to WebSocket proxy");
-    const geminiWs = new WebSocket(`wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${process.env.GEMINI_API_KEY}`);
-    
-    geminiWs.on("open", () => console.log("Connected to Gemini Live API"));
-    geminiWs.on("message", (data) => ws.send(data));
-    geminiWs.on("close", (code, reason) => {
-      console.log("Gemini WS closed", code, reason.toString());
-      ws.close(code, reason);
-    });
-    geminiWs.on("error", (err) => console.error("Gemini WS Error:", err));
-    
-    ws.on("message", (data) => geminiWs.send(data));
-    ws.on("close", (code, reason) => {
-      console.log("Client WS closed", code, reason.toString());
-      geminiWs.close(code, reason);
-    });
-    ws.on("error", (err) => console.error("Client WS Error:", err));
-    
-    // Keep-alive
-    const interval = setInterval(() => {
-      if (ws.readyState === WebSocket.OPEN) ws.ping();
-    }, 30000);
-    ws.on("close", () => clearInterval(interval));
-  });
-}
-
-startServer();
