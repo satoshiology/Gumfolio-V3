@@ -42,7 +42,7 @@ export function TopAppBar() {
         </div>
       </div>
 
-      <div className="flex-1 flex justify-center">
+      <div className="absolute left-1/2 -translate-x-1/2 flex justify-center pointer-events-auto">
         <button 
           onClick={() => window.open('https://pro.gumfolio.xyz', '_blank')}
           type="button" 
