@@ -32,14 +32,14 @@ function LicenseCard({ sale, onManage }: { sale: Sale, onManage: (data: { sale: 
     return () => { mounted = false; };
   }, [sale]);
 
-  // Handle explicit increment action
-  const handleIncrease = async () => {
+  // Handle explicit decrement action
+  const handleDecrease = async () => {
     setVerification(prev => ({ ...prev, loading: true }));
     try {
-        const res = await gumroadService.verifyLicense(sale.product_id, sale.license_key || "", true);
+        const res = await ActionRegistry.get("decrementLicenseUses")!.execute(sale.product_id, sale.license_key || "");
         setVerification({ result: res, loading: false, error: null });
     } catch {
-        setVerification(prev => ({ ...prev, loading: false, error: "Failed to increment" }));
+        setVerification(prev => ({ ...prev, loading: false, error: "Failed to decrement" }));
     }
   };
 
@@ -126,13 +126,14 @@ function LicenseCard({ sale, onManage }: { sale: Sale, onManage: (data: { sale: 
                 {verification.result.uses}
                 <div className="relative group/free">
                     <button 
-                        onClick={() => handleIncrease()} 
+                        onClick={() => handleDecrease()} 
                         className={cn(
-                            "p-1 rounded-full transition-all text-primary hover:text-white"
+                            "p-1 rounded-full transition-all text-red-400 hover:text-white"
                         )}
+                        title="Decrease usage"
                     >
                         <div className="flex items-center gap-1">
-                            <Plus className="w-4 h-4"/>
+                            <Minus className="w-4 h-4"/>
                         </div>
                     </button>
                 </div>

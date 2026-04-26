@@ -30,16 +30,26 @@ export function TopAppBar() {
   return (
     <header className="fixed top-0 w-full z-50 bg-white/5 backdrop-blur-2xl border-b border-white/5 flex justify-between items-center px-6 py-4">
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center border border-white/10 glass-panel">
-            <img 
-              src={isPro ? "https://www.image2url.com/r2/default/images/1776759297297-28090905-e87b-43b4-a066-a13dee62a58e.png" : "https://subpagebucket.s3.eu-north-1.amazonaws.com/library/934/7f7e89a4-95ff-4e7f-b5d8-82325118dded.png"} 
-              alt="Gumfolio Logo" 
-              className="w-full h-full object-contain"
-              referrerPolicy="no-referrer"
-            />
+        <Link to="/profile" className="flex items-center gap-3 active:scale-95 transition-transform">
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border-2 border-primary/20 shadow-lg shadow-primary/10">
+            {user?.profile_picture_url ? (
+              <img 
+                src={user.profile_picture_url} 
+                alt={user.name || "User Profile"} 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                <User className="w-5 h-5 text-on-surface-variant" />
+              </div>
+            )}
           </div>
-        </div>
+          <div className="hidden md:block">
+            <p className="text-xs font-headline font-bold text-on-surface">{user?.name || "Admin"}</p>
+            <p className="text-[10px] font-label text-primary uppercase tracking-widest">Verified Creator</p>
+          </div>
+        </Link>
       </div>
 
       <div className="absolute left-1/2 -translate-x-1/2 flex justify-center pointer-events-auto">
