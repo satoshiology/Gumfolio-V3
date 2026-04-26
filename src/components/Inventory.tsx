@@ -1,11 +1,12 @@
 import * as React from "react";
-import { TrendingUp, MoreVertical, Plus, Loader2, AlertCircle, CheckCircle2, Package, Search, X, Lock } from "lucide-react";
+import { TrendingUp, MoreVertical, Plus, Loader2, AlertCircle, CheckCircle2, Package, Search, X, Lock, Sparkles } from "lucide-react";
 import { HoldButton } from "./HoldButton";
 import { motion, AnimatePresence } from "motion/react";
 import { cn, formatPrice } from "../lib/utils";
 import { gumroadService } from "../services/gumroadService";
-import { Product } from "../types";
+import { Product, Sale } from "../types";
 import { EmptyState } from "./EmptyState";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 function getPrimaryPrice(product: Product) {
   if (product.is_tiered_membership && product.variants && product.variants.length > 0) {
@@ -40,6 +41,7 @@ function getPrimaryPrice(product: Product) {
 
 export default function Inventory() {
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [sales, setSales] = React.useState<Sale[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [actionLoading, setActionLoading] = React.useState<string | null>(null);
@@ -51,21 +53,43 @@ export default function Inventory() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const fetchProducts = React.useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     try {
-      const res = await gumroadService.getProducts();
-      setProducts(res.products);
+      const [pRes, sRes] = await Promise.all([
+        gumroadService.getProducts(),
+        gumroadService.getSales()
+      ]);
+      setProducts(pRes.products || []);
+      setSales(sRes.sales || []);
     } catch (err: any) {
-      console.error("Products Fetch Error:", err);
-      setError(err.response?.data?.error || "Failed to fetch inventory.");
+      console.error("Fetch Error:", err);
+      setError(err.response?.data?.error || "Failed to fetch inventory data.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   React.useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    fetchData();
+  }, [fetchData]);
+
+  const getProductTrend = React.useCallback((productId: string) => {
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      d.setHours(0, 0, 0, 0);
+      return d;
+    });
+
+    return last7Days.map(date => {
+      const count = sales.filter(s => {
+        const saleDate = new Date(s.created_at);
+        saleDate.setHours(0, 0, 0, 0);
+        return s.product_id === productId && saleDate.getTime() === date.getTime();
+      }).length;
+      return { day: date.toLocaleDateString('en-US', { weekday: 'short' }), sales: count };
+    });
+  }, [sales]);
 
   const handleTogglePublish = async (id: string, currentlyPublished: boolean) => {
     setActionLoading(`toggle-${id}`);
@@ -96,7 +120,7 @@ export default function Inventory() {
       // Optional: Re-fetch after a short delay to ensure consistency with the list view
       setTimeout(() => {
         console.log(`[Inventory] Triggering verification fetch for ${id}`);
-        fetchProducts();
+        fetchData();
       }, 2000);
     } catch (err: any) {
       console.error("Toggle Publish Error:", err);
@@ -190,6 +214,7 @@ export default function Inventory() {
             key={product.id}
             product={product}
             actionLoading={actionLoading}
+            trendData={getProductTrend(product.id)}
             onTogglePublish={() => handleTogglePublish(product.id, product.published)}
           />
         ))}
@@ -216,13 +241,15 @@ export default function Inventory() {
   );
 }
 
-function ProductCard({ product, actionLoading, onTogglePublish }: any) {
+function ProductCard({ product, actionLoading, onTogglePublish, trendData }: any) {
   const { id, name: title, sales_count: sales, published, file_type, thumbnail_url, currency } = product;
   const price = getPrimaryPrice(product);
   const tag = file_type || "Digital Asset";
   const image = thumbnail_url || `https://picsum.photos/seed/${id}/800/600`;
   const isToggling = actionLoading === `toggle-${id}`;
   const [showModal, setShowModal] = React.useState(false);
+
+  const totalWeeklySales = trendData?.reduce((acc: number, curr: any) => acc + curr.sales, 0) || 0;
 
   return (
     <>
@@ -246,6 +273,12 @@ function ProductCard({ product, actionLoading, onTogglePublish }: any) {
               {tag}
             </span>
           </div>
+          {totalWeeklySales > 0 && (
+            <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg flex items-center gap-1.5 ring-1 ring-white/5">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span className="text-[10px] font-bold text-primary">+{totalWeeklySales} this week</span>
+            </div>
+          )}
         </div>
         <div className="space-y-4">
           <div className="flex justify-between items-start">
@@ -269,6 +302,7 @@ function ProductCard({ product, actionLoading, onTogglePublish }: any) {
               </button>
             </div>
           </div>
+          
           <div className="flex justify-between items-center pt-2">
             <div>
               <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Price</p>
@@ -279,7 +313,15 @@ function ProductCard({ product, actionLoading, onTogglePublish }: any) {
               <p className={cn("font-headline text-2xl font-bold", published ? "text-on-surface" : "text-zinc-500")}>{sales}</p>
             </div>
           </div>
-          <div className="pt-4 flex gap-2">
+
+          <div className="py-2 border-t border-white/5">
+            <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">7-Day Sales Trend</p>
+            <div className="h-10 w-full relative">
+              <TrendSparkline data={trendData} />
+            </div>
+          </div>
+
+          <div className="pt-2 flex gap-2">
             <button 
               onClick={() => setShowModal(true)}
               className="flex-1 py-3 neuro-button text-on-surface font-label text-sm font-semibold text-center block"
@@ -289,17 +331,46 @@ function ProductCard({ product, actionLoading, onTogglePublish }: any) {
           </div>
         </div>
       </div>
-      {showModal && <ProductInfoModal product={product} onClose={() => setShowModal(false)} />}
+      {showModal && <ProductInfoModal product={product} trendData={trendData} onClose={() => setShowModal(false)} />}
     </>
   );
 }
+
+function TrendSparkline({ data }: { data: any[] }) {
+    if (!data || data.length === 0) return null;
+    
+    // Check if all zero
+    const isAllZero = data.every(d => d.sales === 0);
+    if (isAllZero) {
+        return (
+            <div className="h-full w-full flex items-center justify-center border-b border-white/5">
+                <span className="text-[10px] text-zinc-600 font-label uppercase tracking-widest">No recent velocity</span>
+            </div>
+        );
+    }
+  
+    return (
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data}>
+          <Line 
+            type="monotone" 
+            dataKey="sales" 
+            stroke="#10b981" 
+            strokeWidth={2} 
+            dot={false} 
+            isAnimationActive={true}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  }
 
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import VariantManager from './VariantManager';
 import { usePro } from "../hooks/usePro";
 
-function ProductInfoModal({ product, onClose }: any) {
+function ProductInfoModal({ product, onClose, trendData }: any) {
   const [fullView, setFullView] = React.useState(false);
   const [showVariantManager, setShowVariantManager] = React.useState(false);
   const isPro = usePro();
@@ -399,7 +470,7 @@ function ProductInfoModal({ product, onClose }: any) {
               </HoldButton>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
                 <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">Total Revenue</span>
                 <p className="font-headline text-xl text-on-surface">{formatPrice(product.sales_usd_cents, 'USD')}</p>
@@ -407,6 +478,12 @@ function ProductInfoModal({ product, onClose }: any) {
               <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
                 <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">Total Sales</span>
                 <p className="font-headline text-xl text-on-surface">{product.sales_count}</p>
+              </div>
+              <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
+                <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">7-Day Trend</span>
+                <div className="h-8 w-full">
+                    <TrendSparkline data={trendData} />
+                </div>
               </div>
             </div>
 
