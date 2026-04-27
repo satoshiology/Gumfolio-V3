@@ -100,7 +100,7 @@ function LicenseCard({ sale, onManage }: { sale: Sale, onManage: (data: { sale: 
         <div className="grid grid-cols-[1fr_auto] gap-4">
           <div className="bg-black/30 rounded-2xl p-4 border border-white/5 font-mono flex justify-between items-center group/key">
               <div className="min-w-0 flex-1">
-                  <span className="text-[10px] font-label text-on-surface-variant uppercase tracking-widest block mb-1">License Key</span>
+                  <span className="text-[10px] font-label text-on-surface-variant uppercase tracking-widest block mb-1">Key</span>
                   <code className="text-secondary text-sm break-all">{sale.license_key}</code>
               </div>
               <CopyButton text={sale.license_key || ""} />
@@ -121,7 +121,7 @@ function LicenseCard({ sale, onManage }: { sale: Sale, onManage: (data: { sale: 
       {verification.result && !verification.loading && (
         <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/5">
           <div className="space-y-1">
-            <span className="text-[10px] uppercase tracking-widest text-on-surface-variant">Usage Count</span>
+            <span className="text-[10px] uppercase tracking-widest text-on-surface-variant">Used Times</span>
             <div className="text-on-surface font-headline font-bold text-lg flex items-center gap-2">
                 {verification.result.uses}
                 <div className="relative group/free">
@@ -153,7 +153,7 @@ function LicenseCard({ sale, onManage }: { sale: Sale, onManage: (data: { sale: 
         className="w-full mt-2 px-4 py-3 rounded-2xl text-[10px] font-label font-bold uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-primary/10 hover:border-primary/20 hover:text-primary transition-all duration-300 flex items-center justify-center gap-2"
       >
         <Settings className="w-3.5 h-3.5" />
-        Manage License
+        Manage License Options
       </button>
     </motion.div>
   );
@@ -198,7 +198,7 @@ export default function Licenses() {
       className="max-w-lg mx-auto flex flex-col items-center pb-24"
     >
       <div className="w-full mb-8 text-center">
-        <span className="font-label text-[0.6875rem] uppercase tracking-[0.2em] text-secondary mb-2 block">Security Protocol</span>
+        <span className="font-label text-[0.6875rem] uppercase tracking-[0.2em] text-secondary mb-2 block">Security</span>
         <h1 className="font-headline text-5xl font-extrabold tracking-tight leading-none mb-4">Licenses</h1>
         <p className="text-on-surface-variant max-w-xs mx-auto">Search and manage existing license keys.</p>
       </div>
@@ -229,7 +229,7 @@ export default function Licenses() {
           {salesLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className="w-10 h-10 text-primary animate-spin" />
-              <p className="text-on-surface-variant font-label uppercase tracking-widest text-[10px]">Accessing Secure Database...</p>
+              <p className="text-on-surface-variant font-label uppercase tracking-widest text-[10px]">Getting your keys...</p>
             </div>
           ) : filteredSales.length > 0 ? (
             filteredSales.map((sale) => (
@@ -319,7 +319,7 @@ function ManageModal({ sale, verification, onClose, onRefresh }: any) {
           <X className="w-5 h-5" />
         </button>
         
-        <h3 className="font-headline text-2xl font-bold mb-2">Manage License</h3>
+        <h3 className="font-headline text-2xl font-bold mb-2">License Options</h3>
         <p className="text-sm text-on-surface-variant mb-6 break-all">{sale.license_key}</p>
 
         {error && (
@@ -338,11 +338,11 @@ function ManageModal({ sale, verification, onClose, onRefresh }: any) {
 
         {liveVerification && (
           <div className="mb-6 bg-surface-container/20 rounded-2xl p-5 border border-white/5 space-y-4">
-            <DetailRow label="Current Usages" value={liveVerification.uses.toString()} isHighlight={true} />
-            <DetailRow label="Purchase Date" value={new Date(liveVerification.purchase.created_at).toLocaleDateString()} />
-            <DetailRow label="Purchaser Email" value={liveVerification.purchase.email} />
+            <DetailRow label="Used times" value={liveVerification.uses.toString()} isHighlight={true} />
+            <DetailRow label="Bought on" value={new Date(liveVerification.purchase.created_at).toLocaleDateString()} />
+            <DetailRow label="Bought by" value={liveVerification.purchase.email} />
             {liveVerification.purchase.refunded && (
-               <DetailRow label="Status" value="Refunded / Revoked" isHighlight={true} />
+               <DetailRow label="State" value="Refunded / Taken back" isHighlight={true} />
             )}
           </div>
         )}
@@ -350,25 +350,25 @@ function ManageModal({ sale, verification, onClose, onRefresh }: any) {
         <div className="space-y-4">
           <div className="bg-surface-container/40 p-4 rounded-xl border border-white/5">
             <h4 className="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-3 flex items-center justify-between">
-                Usage Control
+                Usage
             </h4>
             <div className="relative group/control">
                 <div className={cn("flex gap-3")}>
                   <button 
                     disabled={loadingAction !== null}
-                    onClick={() => setConfirmAction({ name: 'Decrease Usages', fn: () => ActionRegistry.get("decrementLicenseUses")!.execute(sale.product_id, sale.license_key) })}
+                    onClick={() => setConfirmAction({ name: 'Lower Use Count', fn: () => ActionRegistry.get("decrementLicenseUses")!.execute(sale.product_id, sale.license_key) })}
                     className="flex-1 py-3 rounded-xl bg-surface-bright/20 border border-outline-variant/15 text-on-surface font-label text-xs font-semibold hover:bg-zinc-800/60 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    {loadingAction === 'Decrease Usages' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Minus className="w-4 h-4" />}
-                    Decrease
+                    {loadingAction === 'Lower Use Count' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Minus className="w-4 h-4" />}
+                    Lower
                   </button>
                   <button 
                     disabled={loadingAction !== null}
-                    onClick={() => setConfirmAction({ name: 'Increase Usages', fn: () => ActionRegistry.get("verifyLicense")!.execute(sale.product_id, sale.license_key, true) })}
+                    onClick={() => setConfirmAction({ name: 'Raise Use Count', fn: () => ActionRegistry.get("verifyLicense")!.execute(sale.product_id, sale.license_key, true) })}
                     className="flex-1 py-3 rounded-xl bg-surface-bright/20 border border-outline-variant/15 text-on-surface font-label text-xs font-semibold hover:bg-zinc-800/60 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    {loadingAction === 'Increase Usages' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                    Increase
+                    {loadingAction === 'Raise Use Count' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    Raise
                   </button>
                 </div>
             </div>
@@ -381,40 +381,40 @@ function ManageModal({ sale, verification, onClose, onRefresh }: any) {
             <div className="relative group/control">
                 <button 
                   disabled={loadingAction !== null}
-                  onClick={() => setConfirmAction({ name: 'Rotate License', fn: () => ActionRegistry.get("rotateLicense")!.execute(sale.product_id, sale.license_key) })}
+                  onClick={() => setConfirmAction({ name: 'Get replacement key', fn: () => ActionRegistry.get("rotateLicense")!.execute(sale.product_id, sale.license_key) })}
                   className={cn(
                     "w-full py-3 rounded-xl font-label text-xs font-semibold transition-all flex items-center justify-center gap-2 border bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20"
                   )}
                 >
-                  {loadingAction === 'Rotate License' ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCcw className="w-4 h-4" />}
-                  Rotate Key
+                  {loadingAction === 'Get replacement key' ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCcw className="w-4 h-4" />}
+                  Get replacement key
                 </button>
             </div>
           </div>
 
           <div className="bg-surface-container/40 p-4 rounded-xl border border-white/5">
             <h4 className="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-3 flex items-center justify-between">
-                Access State
+                Turn on/off
             </h4>
             <div className="relative group/control">
               <div className={cn("flex gap-3")}>
                 {sale.license_disabled ? (
                   <button 
                     disabled={loadingAction !== null}
-                    onClick={() => setConfirmAction({ name: 'Enable License', fn: () => ActionRegistry.get("enableLicense")!.execute(sale.product_id, sale.license_key) })}
+                    onClick={() => setConfirmAction({ name: 'Turn on Key', fn: () => ActionRegistry.get("enableLicense")!.execute(sale.product_id, sale.license_key) })}
                     className="flex-1 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary font-label text-xs font-semibold hover:bg-primary/20 transition-colors flex items-center justify-center gap-2 "
                   >
-                    {loadingAction === 'Enable License' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Power className="w-4 h-4" />}
-                    Enable
+                    {loadingAction === 'Turn on Key' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Power className="w-4 h-4" />}
+                    Turn on
                   </button>
                 ) : (
                   <button 
                     disabled={loadingAction !== null}
-                    onClick={() => setConfirmAction({ name: 'Disable License', fn: () => ActionRegistry.get("disableLicense")!.execute(sale.product_id, sale.license_key) })}
+                    onClick={() => setConfirmAction({ name: 'Turn off Key', fn: () => ActionRegistry.get("disableLicense")!.execute(sale.product_id, sale.license_key) })}
                     className="flex-1 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-label text-xs font-semibold hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2 "
                   >
-                    {loadingAction === 'Disable License' ? <Loader2 className="w-4 h-4 animate-spin" /> : <PowerOff className="w-4 h-4" />}
-                    Disable
+                    {loadingAction === 'Turn off Key' ? <Loader2 className="w-4 h-4 animate-spin" /> : <PowerOff className="w-4 h-4" />}
+                    Turn off
                   </button>
                 )}
               </div>

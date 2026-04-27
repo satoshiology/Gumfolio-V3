@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { LayoutDashboard, Package, CreditCard, Key, User, Sparkles, Settings as SettingsIcon, Zap, Users, Send, X } from "lucide-react";
 import { cn } from "../lib/utils";
+import { playSound, hapticFeedback } from "../lib/audio";
 import { gumroadService } from "../services/gumroadService";
 import { User as UserType } from "../types";
 import { useChatContext } from "../context/ChatContext";
@@ -47,7 +48,7 @@ export function TopAppBar() {
           </div>
           <div className="hidden md:block">
             <p className="text-xs font-headline font-bold text-on-surface">{user?.name || "Admin"}</p>
-            <p className="text-[10px] font-label text-primary uppercase tracking-widest">Verified Creator</p>
+            <p className="text-[10px] font-label text-primary uppercase tracking-widest">Verified</p>
           </div>
         </Link>
       </div>
@@ -58,7 +59,7 @@ export function TopAppBar() {
           type="button" 
           className="btn-space"
         >
-          <strong>GO PRO</strong>
+          <strong>UPGRADE</strong>
           <div id="container-stars">
             <div id="stars"></div>
           </div>
@@ -70,7 +71,14 @@ export function TopAppBar() {
       </div>
 
       <div className="flex items-center gap-2">
-        <Link to="/settings" className="p-2 rounded-xl hover:bg-white/10 transition-colors text-on-surface-variant hover:text-primary">
+        <Link 
+          to="/settings" 
+          onClick={() => {
+            playSound('button');
+            hapticFeedback('light');
+          }}
+          className="p-2 rounded-xl hover:bg-white/10 transition-colors text-on-surface-variant hover:text-primary"
+        >
           <SettingsIcon className="w-6 h-6" />
         </Link>
       </div>
@@ -97,7 +105,7 @@ export function BottomNavBar() {
     { icon: Package, label: "Products", path: "/inventory" },
     { icon: CreditCard, label: "Sales", path: "/sales" },
     { icon: Sparkles, label: "", path: "/dash-ai", isSpecial: true },
-    { icon: Users, label: "Subs", path: "/subscribers" },
+    { icon: Users, label: "Fans", path: "/subscribers" },
     { icon: Key, label: "Licenses", path: "/licenses" },
   ];
 
@@ -126,7 +134,11 @@ export function BottomNavBar() {
             style={{ boxShadow: '0 -10px 40px color-mix(in srgb, var(--color-primary) 10%, transparent)' }}
           >
             <button 
-              onClick={() => setDashMode('keyboard')}
+              onClick={() => {
+                setDashMode('keyboard');
+                playSound('button');
+                hapticFeedback('light');
+              }}
               className="p-2 text-zinc-400 hover:text-white transition-colors"
             >
               <X className="w-6 h-6" />
@@ -136,11 +148,15 @@ export function BottomNavBar() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAISend()}
-              placeholder="Message AI Strategist..."
+              placeholder="Message AI Assistant..."
               className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-primary/50"
             />
             <button 
-              onClick={handleAISend}
+              onClick={() => {
+                handleAISend();
+                playSound('success');
+                hapticFeedback('medium');
+              }}
               disabled={isLoading || !inputText.trim()}
               className="p-3 bg-primary text-black rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
             >
@@ -161,6 +177,8 @@ export function BottomNavBar() {
               key={item.path}
               to={item.path}
               onClick={(e) => {
+                playSound('tab');
+                hapticFeedback('light');
                 if (item.isSpecial) {
                   if (location.pathname !== '/dash-ai') {
                     navigate('/dash-ai');

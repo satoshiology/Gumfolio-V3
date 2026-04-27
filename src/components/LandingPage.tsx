@@ -106,7 +106,7 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
         </div>
         <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm font-label font-medium hover:text-primary transition-colors">Features</a>
-          <a href="#ai" className="text-sm font-label font-medium hover:text-primary transition-colors">AI Intelligence</a>
+          <a href="#ai" className="text-sm font-label font-medium hover:text-primary transition-colors">AI Help</a>
           <a href="#pricing" className="text-sm font-label font-medium hover:text-primary transition-colors">Pricing</a>
         </div>
         <button 
@@ -129,7 +129,7 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold uppercase tracking-wider mb-8">
               <Sparkles className="w-3 h-3" />
-              The Control Panel Gumroad Forgot to Build
+              The simple tool Gumroad should have made
             </div>
             <h1 className="text-5xl md:text-7xl font-headline font-extrabold tracking-tight mb-6 leading-[1.1]">
               The simple control panel <span className="text-primary italic">Gumroad</span> should have built.
@@ -241,23 +241,23 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard 
             icon={<Key className="w-7 h-7" />}
-            title="License Control"
-            description="Instantly increase or decrease license key usage — no more API headaches or digging into customer records."
+            title="Key Control"
+            description="Easily change how many times your keys can be used with just one click."
           />
           <FeatureCard 
             icon={<ToggleLeft className="w-7 h-7" />}
-            title="One-Click Status"
-            description="One-click publish or unpublish any product. Control your entire inventory from a single, unified interface."
+            title="One-Click on/off"
+            description="Turn your products on or off with one tap. Control everything you sell from one spot."
           />
           <FeatureCard 
             icon={<LayoutDashboard className="w-7 h-7" />}
             title="Clean Dashboard"
-            description="All your licenses and recent sales in one place. No clutter, just the data you need to run your business."
+            description="See your keys and latest sales in one easy place. No mess, just the stuff you need."
           />
         </div>
       </section>
 
-      {/* AI Strategist Section */}
+      {/* AI Assistant Section */}
       <section id="ai" className="py-24 px-6 max-w-7xl mx-auto relative overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8">
@@ -265,11 +265,11 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
               <Bot className="w-8 h-8" />
             </div>
             <h2 className="text-4xl md:text-6xl font-headline font-bold leading-tight">
-              A built-in AI Strategist <br />
+              A built-in AI Assistant <br />
               <span className="text-primary italic">that actually gets it.</span>
             </h2>
             <p className="text-on-surface-variant text-lg">
-              Gumfolio isn't just a UI—it's a brain. Our Agentic AI doesn't just chat; it executes strategy across your entire store.
+              Gumfolio is more than just a page—it's like having a smart helper. Our AI helps you run your whole store.
             </p>
             
             <div className="space-y-6">
@@ -278,8 +278,8 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
                   <TrendingUpIcon className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold mb-1 group-hover:text-primary transition-colors">AI Strategist</h4>
-                  <p className="text-sm text-on-surface-variant">Analyzes sales patterns and historical data to recommend price adjustments and bundle strategies during peak hours.</p>
+                  <h4 className="font-bold mb-1 group-hover:text-primary transition-colors">AI Assistant</h4>
+                  <p className="text-sm text-on-surface-variant">Looks at your sales and helps you pick the best prices for your shop.</p>
                 </div>
               </div>
               
@@ -288,8 +288,8 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
                   <ShieldCheck className="w-5 h-5 text-secondary" />
                 </div>
                 <div>
-                  <h4 className="font-bold mb-1 group-hover:text-secondary transition-colors">Autonomous Growth Agent</h4>
-                  <p className="text-sm text-on-surface-variant">Optionally manages your SEO tags and license key batches 24/7, ensuring your store is always optimized for discovery and fulfillment.</p>
+                  <h4 className="font-bold mb-1 group-hover:text-secondary transition-colors">Auto Growing Tool</h4>
+                  <p className="text-sm text-on-surface-variant">Helps you manage your keys and shop 24/7 so you always have enough for everyone.</p>
                 </div>
               </div>
             </div>
@@ -333,8 +333,8 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
       {/* Pricing Section */}
       <section id="pricing" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-headline font-bold mb-4">Choose Your Pace</h2>
-          <p className="text-on-surface-variant text-lg">Stop wasting time, start growing faster.</p>
+          <h2 className="text-3xl md:text-5xl font-headline font-bold mb-4">Pick your plan</h2>
+          <p className="text-on-surface-variant text-lg">Stop wasting time and start growing faster.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Starter */}
@@ -344,9 +344,9 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
               <span className="text-4xl font-headline font-bold">$9</span>
               <span className="text-on-surface-variant text-sm">/month</span>
             </div>
-            <p className="text-on-surface-variant text-sm mb-8">Everything you need to stop wasting time on Gumroad administration.</p>
+            <p className="text-on-surface-variant text-sm mb-8">Everything you need to stop wasting time doing chores on Gumroad.</p>
             <ul className="space-y-4 mb-10 flex-1">
-              {["Master Control Panel", "License Key Management", "One-Click Publishing", "Basic Analytics"].map((item, i) => (
+              {["Full Control Panel", "Key Management", "One-Click on/off", "Easy Charts"].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm">
                   <CheckCircle2 className="w-4 h-4 text-primary" />
                   {item}
@@ -366,14 +366,14 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
               <span className="text-4xl font-headline font-bold">$19</span>
               <span className="text-on-surface-variant text-sm">/month</span>
             </div>
-            <p className="text-on-surface-variant text-sm mb-8">Advanced features + priority support for serious creators.</p>
+            <p className="text-on-surface-variant text-sm mb-8">Better tools + help for big creators.</p>
             <ul className="space-y-4 mb-10 flex-1">
               {[
                 "Everything in Starter",
-                "Built-in AI Strategist",
-                "Autonomous Growth Agent",
+                "Built-in AI Assistant",
+                "Auto Growing Tool",
                 "Priority Support",
-                "Custom Themes"
+                "Custom Looks"
               ].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm font-semibold text-white">
                   <CheckCircle2 className="w-4 h-4 text-primary" />

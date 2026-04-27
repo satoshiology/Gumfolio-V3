@@ -45,11 +45,11 @@ export default function AgentConsole() {
       className="space-y-8 pb-24"
     >
       <header className="flex justify-between items-center">
-        <h1 className="text-4xl font-headline font-extrabold tracking-tight">Agent Console</h1>
+        <h1 className="text-4xl font-headline font-extrabold tracking-tight">AI Settings</h1>
       </header>
 
       <div className="bg-surface-container/40 p-6 rounded-2xl border border-white/5 space-y-4">
-        <h2 className="text-lg font-bold">New Agent Configuration</h2>
+        <h2 className="text-lg font-bold">New Helper Setup</h2>
         <div className="space-y-2">
             <label className="text-sm text-on-surface-variant">Model</label>
             <select 
@@ -75,7 +75,7 @@ export default function AgentConsole() {
           className="flex items-center justify-center w-full gap-2 bg-primary text-black px-6 py-3 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin"/> : <Plus className="w-5 h-5" />}
-          Spawn Agent
+          Create AI helper
         </button>
       </div>
 
@@ -98,7 +98,7 @@ export default function AgentConsole() {
             </div>
             <p className="text-sm text-on-surface-variant">Model: {agent.model}</p>
             <div className="pt-4 border-t border-white/5">
-                <p className="text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">Available Actions</p>
+                <p className="text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">What it can do</p>
                 <div className="flex gap-2">
                     <Zap className="w-6 h-6 text-secondary"/>
                     <span className="text-sm font-body">Gemini Flash Active</span>
@@ -109,7 +109,7 @@ export default function AgentConsole() {
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold">Run History</h2>
+        <h2 className="text-2xl font-bold">Past helper work</h2>
         {runs.map((run, i) => (
             <div key={i} className="bg-zinc-900 p-4 rounded-xl border border-white/5 space-y-2">
                 <p className="text-sm font-mono text-primary">{new Date(run.timestamp).toLocaleString()}</p>

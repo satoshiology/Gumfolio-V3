@@ -44,7 +44,7 @@ export default function AIAgent() {
         <button onClick={() => setConsoleOpen(true)} className="text-secondary hover:text-primary transition-colors">
           <Zap className="w-6 h-6" />
         </button>
-        <h1 className="text-4xl font-headline font-extrabold tracking-tight text-on-surface">AI Strategist</h1>
+        <h1 className="text-4xl font-headline font-extrabold tracking-tight text-on-surface">AI Assistant</h1>
         <div className="w-6" /> {/* Spacer */}
       </header>
 
@@ -85,7 +85,7 @@ export default function AIAgent() {
                 )}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className={cn("text-[9px] font-bold uppercase tracking-widest", msg.role === "user" ? "text-primary": "text-secondary")}>
-                      {msg.role === "user" ? "You" : "Ally"}
+                      {msg.role === "user" ? "You" : "Assistant"}
                     </span>
                   </div>
                   {msg.role === "user" ? (
@@ -112,7 +112,7 @@ export default function AIAgent() {
                       <button 
                         onClick={() => pinItem(msg.content)}
                         className="mt-2 opacity-50 hover:opacity-100 transition-opacity"
-                        title="Pin to Echo Chamber"
+                        title="Save to My Plan"
                       >
                        <Pin className="w-4 h-4" />
                       </button>
@@ -120,7 +120,7 @@ export default function AIAgent() {
                   )}
                 </div>
                 <span className="text-[10px] font-label text-zinc-600 uppercase tracking-widest mt-2 px-1">
-                  {msg.role === "user" ? "You" : "STRATEGY ALLY"} • {msg.timestamp}
+                  {msg.role === "user" ? "You" : "AI ASSISTANT"} • {msg.timestamp}
                 </span>
               </motion.div>
             ))}

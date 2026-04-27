@@ -1,13 +1,15 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { triggerHaptic, playSound } from "../lib/audio";
 
 export function HoldButton({ onComplete, children, className, actionText, disabled }: any) {
   const [progress, setProgress] = React.useState(0);
   const [isHolding, setIsHolding] = React.useState(false);
   const requestRef = React.useRef<number | undefined>(undefined);
   const startTimeRef = React.useRef<number | undefined>(undefined);
+  const lastHapticRef = React.useRef<number>(0);
 
-  const duration = 5000; // 5 seconds
+  const duration = 2000; // Reduced to 2 seconds for better user experience
 
   const animate = (time: number) => {
     if (!startTimeRef.current) startTimeRef.current = time;
@@ -15,10 +17,18 @@ export function HoldButton({ onComplete, children, className, actionText, disabl
     const currentProgress = Math.min((elapsed / duration) * 100, 100);
     setProgress(currentProgress);
 
+    // Pulse haptic every 500ms
+    if (time - lastHapticRef.current > 500) {
+        lastHapticRef.current = time;
+        triggerHaptic('light');
+    }
+
     if (currentProgress < 100) {
       requestRef.current = requestAnimationFrame(animate);
     } else {
       setIsHolding(false);
+      triggerHaptic('success');
+      playSound('success');
       onComplete();
     }
   };
@@ -27,6 +37,8 @@ export function HoldButton({ onComplete, children, className, actionText, disabl
     if (disabled) return;
     setIsHolding(true);
     startTimeRef.current = undefined;
+    playSound('button');
+    triggerHaptic('medium');
     requestRef.current = requestAnimationFrame(animate);
   };
 

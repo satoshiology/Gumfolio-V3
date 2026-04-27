@@ -19,11 +19,11 @@ export function StrategyEchoChamber() {
     try {
         const strategyContext = pinnedItems.map(item => item.content).join("\n\n---\n\n");
         const response = await chatRef.current.sendMessage({ 
-            message: `Analyze these pinned strategies and offer a consolidated, high-level tactical execution plan. Include:\n1. A detailed execution plan.\n2. Potential risks and mitigation strategies.\n3. Key success metrics to track.\n\nPinned Strategies:\n${strategyContext}` 
+            message: `Look at these ideas and give me a clear plan to follow. Include:\n1. A detailed plan.\n2. Any problems that might happen.\n3. How to know if it's working.\n\nIdeas:\n${strategyContext}` 
         });
         setMessages(prev => [...prev, { 
           role: "assistant", 
-          content: `### 🧠 Strategy Synapse Insights\n\n${response.text}` 
+          content: `### 🧠 My Best Ideas\n\n${response.text}` 
         }]);
     } catch (e) {
         console.error("Synapse error", e);
@@ -37,7 +37,7 @@ export function StrategyEchoChamber() {
       <h2 className="text-xl font-headline font-bold text-on-surface mb-6 flex items-center justify-between">
         <span className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-primary" />
-            Strategy Echo
+            My Plan
         </span>
       </h2>
       <div className="flex-1 overflow-y-auto space-y-4">
@@ -61,7 +61,7 @@ export function StrategyEchoChamber() {
             </motion.div>
           ))}
           {pinnedItems.length === 0 && (
-            <p className="text-zinc-600 text-center italic mt-10">No strategies pinned yet. Pin insights from the AI chat.</p>
+            <p className="text-zinc-600 text-center italic mt-10">Nothing here yet. Save ideas from the AI chat to see them.</p>
           )}
         </AnimatePresence>
       </div>
@@ -73,7 +73,7 @@ export function StrategyEchoChamber() {
               className="mt-4 w-full p-4 rounded-xl bg-primary/20 border border-primary/50 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/30 transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]"
           >
               <BrainCircuit className={cn("w-6 h-6", isSynthesizing && "animate-pulse")} />
-              GENERATE STRATEGY
+              MAKE MY PLAN
           </button>
       )}
 

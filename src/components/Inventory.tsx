@@ -3,6 +3,7 @@ import { TrendingUp, MoreVertical, Plus, Loader2, AlertCircle, CheckCircle2, Pac
 import { HoldButton } from "./HoldButton";
 import { motion, AnimatePresence } from "motion/react";
 import { cn, formatPrice } from "../lib/utils";
+import { hapticFeedback, playSound } from "../lib/audio";
 import { gumroadService } from "../services/gumroadService";
 import { Product, Sale } from "../types";
 import { EmptyState } from "./EmptyState";
@@ -142,7 +143,7 @@ export default function Inventory() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="text-on-surface-variant font-label uppercase tracking-widest text-xs">Scanning Product Database...</p>
+        <p className="text-on-surface-variant font-label uppercase tracking-widest text-xs">Looking for products...</p>
       </div>
     );
   }
@@ -181,14 +182,14 @@ export default function Inventory() {
       <header>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <span className="font-label text-xs uppercase tracking-[0.2em] text-secondary mb-2 block">Commerce Portfolio</span>
+            <span className="font-label text-xs uppercase tracking-[0.2em] text-secondary mb-2 block">My Store</span>
             <h2 className="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-on-surface">Inventory</h2>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 bg-surface-container-high/50 px-4 py-2 rounded-2xl border border-outline-variant/10 backdrop-blur-md">
               <TrendingUp className="w-5 h-5 text-primary-fixed-dim" />
               <span className="font-label text-sm text-on-surface-variant">
-                Active Revenue Stream: <span className="text-on-surface font-bold">{totalRevenueFormatted}</span>
+                Money coming in: <span className="text-on-surface font-bold">{totalRevenueFormatted}</span>
               </span>
             </div>
             
@@ -286,7 +287,12 @@ function ProductCard({ product, actionLoading, onTogglePublish, trendData }: any
             <div className="flex items-center gap-2">
               <span className="font-label text-xs text-on-surface-variant">{published ? "Published" : "Unpublished"}</span>
               <button 
-                onClick={onTogglePublish}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onTogglePublish();
+                    playSound('switch');
+                    hapticFeedback('medium');
+                }}
                 disabled={isToggling}
                 className={cn(
                   "w-8 h-4 rounded-full relative p-0.5 cursor-pointer transition-colors disabled:opacity-50",
@@ -323,7 +329,11 @@ function ProductCard({ product, actionLoading, onTogglePublish, trendData }: any
 
           <div className="pt-2 flex gap-2">
             <button 
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                setShowModal(true);
+                playSound('button');
+                hapticFeedback('light');
+              }}
               className="flex-1 py-3 neuro-button text-on-surface font-label text-sm font-semibold text-center block"
             >
               View Product
@@ -402,8 +412,12 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
-            <h2 className="text-2xl font-headline font-bold text-on-surface">Product Insights</h2>
-            <button onClick={onClose} className="text-on-surface-variant hover:text-on-surface hover:text-primary transition-colors">Close</button>
+            <h2 className="text-2xl font-headline font-bold text-on-surface">About this product</h2>
+            <button onClick={() => {
+                onClose();
+                playSound('button');
+                hapticFeedback('light');
+            }} className="text-on-surface-variant hover:text-on-surface hover:text-primary transition-colors">Close</button>
           </div>
           
           <div className="flex-1 overflow-y-auto p-8 space-y-8">
@@ -433,13 +447,17 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
             <div className="flex flex-col gap-3 pt-4 border-t border-white/5">
               <div className="relative group">
                 <button 
-                  onClick={() => setShowVariantManager(true)}
+                  onClick={() => {
+                    setShowVariantManager(true);
+                    playSound('button');
+                    hapticFeedback('medium');
+                  }}
                   className={cn(
                     "w-full px-4 py-3 rounded-xl text-xs font-label font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(0,224,255,0.1)] text-center",
                     "bg-[#00e0ff]/10 text-[#00e0ff] border border-[#00e0ff]/30 hover:bg-[#00e0ff]/20"
                   )}
                 >
-                  Manage Variants
+                  Manage Options
                 </button>
               </div>
 
@@ -472,7 +490,7 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
-                <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">Total Revenue</span>
+                <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">Total money made</span>
                 <p className="font-headline text-xl text-on-surface">{formatPrice(product.sales_usd_cents, 'USD')}</p>
               </div>
               <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
@@ -480,7 +498,7 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
                 <p className="font-headline text-xl text-on-surface">{product.sales_count}</p>
               </div>
               <div className="bg-surface-container-low p-4 rounded-xl border border-white/5">
-                <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">7-Day Trend</span>
+                <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant block mb-2">Last 7 days</span>
                 <div className="h-8 w-full">
                     <TrendSparkline data={trendData} />
                 </div>
@@ -497,10 +515,10 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
             )}
 
             <div className="space-y-4 pt-4 border-t border-white/5">
-              <h4 className="font-label text-sm uppercase tracking-widest text-on-surface">Technical Metadata</h4>
+              <h4 className="font-label text-sm uppercase tracking-widest text-on-surface">Details</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <span className="font-label uppercase tracking-widest text-[10px] text-on-surface-variant">Asset Type</span>
+                  <span className="font-label uppercase tracking-widest text-[10px] text-on-surface-variant">Type</span>
                   <p className="font-mono text-sm text-on-surface">{product.file_type || 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
@@ -508,7 +526,7 @@ function ProductInfoModal({ product, onClose, trendData }: any) {
                   <p className="font-mono text-sm text-on-surface">{product.file_size || 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="font-label uppercase tracking-widest text-[10px] text-on-surface-variant">License Model</span>
+                  <span className="font-label uppercase tracking-widest text-[10px] text-on-surface-variant">Key type</span>
                   <p className="font-mono text-sm text-on-surface">{product.license || 'N/A'}</p>
                 </div>
                 <div className="space-y-1">

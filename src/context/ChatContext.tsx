@@ -311,28 +311,29 @@ ${context}`,
 
     const isPro = await checkProStatus();
     
-    // Check daily limits
-    const today = new Date().toDateString();
-    const lastResetDate = localStorage.getItem('last_chat_reset_date');
-    let dailyCount = parseInt(localStorage.getItem('daily_chat_count') || '0');
+    // Check monthly limits
+    const now = new Date();
+    const currentMonth = `${now.getMonth()}-${now.getFullYear()}`;
+    const lastResetMonth = localStorage.getItem('last_chat_reset_month');
+    let monthlyCount = parseInt(localStorage.getItem('monthly_chat_count') || '0');
 
-    if (lastResetDate !== today) {
-      dailyCount = 0;
-      localStorage.setItem('last_chat_reset_date', today);
-      localStorage.setItem('daily_chat_count', '0');
+    if (lastResetMonth !== currentMonth) {
+      monthlyCount = 0;
+      localStorage.setItem('last_chat_reset_month', currentMonth);
+      localStorage.setItem('monthly_chat_count', '0');
     }
 
-    const limit = isPro ? 20 : 5;
-    if (dailyCount >= limit) {
+    const limit = isPro ? 20 : 10;
+    if (monthlyCount >= limit) {
       const blockedMessage = isPro 
-        ? "You have reached your PRO limit of 20 chats per day. See you tomorrow!"
-        : "You've used your 5 free daily chats. Upgrade to PRO to unlock 20 chats per day, or check back tomorrow!";
+        ? "You have reached your PRO limit of 20 chats per month. See you next month!"
+        : "You've used your 10 free monthly chats. Upgrade to PRO to unlock 20 chats per month, or check back next month!";
       setMessages(prev => [...prev, { role: "assistant", content: blockedMessage }]);
       return blockedMessage;
     }
 
-    // Increment both persistent daily count and current session count
-    localStorage.setItem('daily_chat_count', (dailyCount + 1).toString());
+    // Increment both persistent monthly count and current session count
+    localStorage.setItem('monthly_chat_count', (monthlyCount + 1).toString());
     setChatCount(prev => prev + 1);
 
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

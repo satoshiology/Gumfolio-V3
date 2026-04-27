@@ -42,7 +42,7 @@ export function DriftAlertDisplay({ alerts }: DriftAlertDisplayProps) {
             onClick={() => setSelectedAlert(alert)}
             className="flex items-center gap-2 text-primary font-bold text-sm hover:underline"
           >
-            Auto-Correction Suggestions <ArrowRight className="w-4 h-4" />
+            How to fix this <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
       ))}

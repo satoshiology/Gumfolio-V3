@@ -10,7 +10,7 @@ export function ImpactReportDisplay() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Recent Strategic Impacts</h3>
+      <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Recent Fixes</h3>
       {history.map((h, i) => (
         <motion.div
           key={i}
@@ -23,8 +23,8 @@ export function ImpactReportDisplay() {
                 <CheckCircle className="w-5 h-5 text-primary" />
              </div>
              <div>
-                <p className="text-sm font-bold text-on-surface">Action Applied: {h.actionId}</p>
-                <p className="text-xs text-on-surface-variant font-mono">Impact: Optimization in progress...</p>
+                <p className="text-sm font-bold text-on-surface">Fixed: {h.actionId}</p>
+                <p className="text-xs text-on-surface-variant font-mono">Status: Checking impact...</p>
              </div>
           </div>
           <BarChart3 className="w-5 h-5 text-primary/50" />

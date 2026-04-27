@@ -21,9 +21,9 @@ export const ConfirmationToast: React.FC = () => {
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-6 h-6 text-yellow-500 shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-on-surface font-semibold">Approval Required</h3>
+            <h3 className="text-on-surface font-semibold text-lg">Are you sure?</h3>
             <p className="text-on-surface-variant text-sm">
-              The AI agent is requesting approval to perform a high-impact action: <strong>{pendingAction.name}</strong>
+              The AI wants to do something big: <strong>{pendingAction.name}</strong>
             </p>
           </div>
         </div>
@@ -35,16 +35,16 @@ export const ConfirmationToast: React.FC = () => {
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:bg-surface-dim rounded-lg"
           >
-            <X className="w-4 h-4" /> Deny
+            <X className="w-4 h-4" /> No
           </button>
           <button
             onClick={() => {
               pendingAction.resolve(true); // Assuming action execution is handle by caller elsewhere or inside result? Wait, registry handles execution.
               setPendingAction(null);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-primary text-on-primary rounded-lg"
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold bg-primary text-on-primary rounded-lg"
           >
-            <Check className="w-4 h-4" /> Approve
+            <Check className="w-4 h-4" /> Yes
           </button>
         </div>
       </motion.div>

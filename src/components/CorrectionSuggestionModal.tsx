@@ -33,7 +33,7 @@ export function CorrectionSuggestionModal({ isOpen, onClose, actions, onConfirm 
             </button>
           </div>
           
-          <p className="text-sm text-on-surface-variant">Select an action to address the strategic drift. These changes will not apply until confirmed.</p>
+          <p className="text-sm text-on-surface-variant">Select an action to fix the problem. These changes will not apply until you say yes.</p>
 
           <div className="space-y-3">
             {actions.map(action => (

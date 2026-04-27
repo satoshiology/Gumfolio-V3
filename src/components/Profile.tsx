@@ -2,6 +2,7 @@ import * as React from "react";
 import { TrendingUp, ExternalLink, Link as LinkIcon, Copy, Edit3, Loader2, AlertCircle, DollarSign, Clock } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "../lib/utils";
+import { hapticFeedback, playSound } from "../lib/audio";
 import { gumroadService } from "../services/gumroadService";
 import { User, Product, Payout } from "../types";
 
@@ -39,7 +40,7 @@ export default function Profile() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="text-on-surface-variant font-label uppercase tracking-widest text-xs">Loading Profile...</p>
+        <p className="text-on-surface-variant font-label uppercase tracking-widest text-xs">Loading...</p>
       </div>
     );
   }
@@ -77,7 +78,7 @@ export default function Profile() {
           </div>
           <div className="space-y-1">
             <h1 className="text-4xl font-headline font-extrabold tracking-tight text-on-surface">{user.name || "Unnamed Creator"}</h1>
-            <p className="font-label text-sm uppercase tracking-widest text-primary font-semibold">Creator</p>
+            <p className="font-label text-sm uppercase tracking-widest text-primary font-semibold">Artist</p>
           </div>
           <div className="max-w-md">
             <p className="text-on-surface-variant leading-relaxed font-body">
@@ -89,18 +90,27 @@ export default function Profile() {
 
       <section className="grid grid-cols-2 gap-4">
         <div className="bg-surface-container/40 backdrop-blur-xl rounded-xl p-6 border border-white/5 flex flex-col justify-between h-40">
-          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Audience</span>
+          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Fans</span>
           <div>
             <div className="text-4xl font-headline font-bold text-on-surface">{totalAudience.toLocaleString()}</div>
             <div className="flex items-center gap-1 text-secondary text-xs font-label">
               <TrendingUp className="w-4 h-4" />
-              <span>Lifetime sales</span>
+              <span>Total sales</span>
             </div>
           </div>
         </div>
-        <a href={user.url} target="_blank" rel="noopener noreferrer" className={cn("bg-surface-container/40 backdrop-blur-xl rounded-xl p-6 border border-white/5 flex flex-col justify-between h-40 hover:bg-zinc-800/30 transition-all group", !user.url && "pointer-events-none opacity-50")}>
+        <a 
+          href={user.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          onClick={() => {
+            playSound('button');
+            hapticFeedback('light');
+          }}
+          className={cn("bg-surface-container/40 backdrop-blur-xl rounded-xl p-6 border border-white/5 flex flex-col justify-between h-40 hover:bg-zinc-800/30 transition-all group", !user.url && "pointer-events-none opacity-50")}
+        >
           <div className="flex justify-between items-start">
-            <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Social Link</span>
+            <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">My Link</span>
             <ExternalLink className="w-4 h-4 text-on-surface-variant group-hover:text-secondary transition-colors" />
           </div>
           <div>
@@ -111,11 +121,15 @@ export default function Profile() {
       </section>
  
       <section className="space-y-4">
-        <h3 className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant px-1">Identity Access</h3>
+        <h3 className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant px-1">Your Links</h3>
         <div 
           className="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/15 flex items-center justify-between group cursor-pointer hover:border-primary/30 transition-all"
           onClick={() => {
-            if (user.url) navigator.clipboard.writeText(user.url);
+            if (user.url) {
+                navigator.clipboard.writeText(user.url);
+                playSound('success');
+                hapticFeedback('medium');
+            }
           }}
         >
           <div className="flex items-center gap-4">
@@ -123,7 +137,7 @@ export default function Profile() {
               <LinkIcon className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-label font-bold text-on-surface">Public Profile URL</span>
+              <span className="text-sm font-label font-bold text-on-surface">My Page Link</span>
               <span className="text-xs text-on-surface-variant">{user.url?.replace('https://', '') || "N/A"}</span>
             </div>
           </div>
@@ -134,7 +148,7 @@ export default function Profile() {
       </section>
 
       <section className="space-y-4">
-        <h3 className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant px-1">Recent Payouts</h3>
+        <h3 className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant px-1">Money Sent to You</h3>
         <div className="space-y-3">
           {payouts.slice(0, 5).map((payout, i) => (
             <div key={payout.id || i} className="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/15 flex items-center justify-between">
@@ -147,7 +161,7 @@ export default function Profile() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-label font-bold text-on-surface">
-                    {payout.status === 'paid' ? 'Paid Out' : 'Pending'}
+                    {payout.status === 'paid' ? 'Sent' : 'Waiting'}
                   </span>
                   <span className="text-xs text-on-surface-variant">
                     {new Date(payout.created_at).toLocaleDateString()}
@@ -166,16 +180,26 @@ export default function Profile() {
           ))}
           {(payouts || []).length === 0 && (
             <div className="text-center py-8 text-on-surface-variant italic">
-              No payouts found.
+              No money sent yet.
             </div>
           )}
         </div>
       </section>
 
       <section className="pt-4">
-        <a href="https://gumroad.com/settings" target="_blank" rel="noopener noreferrer" className="w-full bg-primary p-[1px] rounded-xl overflow-hidden group block" style={{ boxShadow: '0 0 20px color-mix(in srgb, var(--color-primary) 20%, transparent)' }}>
+        <a 
+          href="https://gumroad.com/settings" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          onClick={() => {
+            playSound('button');
+            hapticFeedback('medium');
+          }}
+          className="w-full bg-primary p-[1px] rounded-xl overflow-hidden group block" 
+          style={{ boxShadow: '0 0 20px color-mix(in srgb, var(--color-primary) 20%, transparent)' }}
+        >
           <div className="w-full h-full bg-surface-dim rounded-[11px] py-4 flex items-center justify-center gap-2 group-hover:bg-transparent transition-all duration-500">
-            <span className="text-sm font-label font-bold uppercase tracking-widest text-on-surface group-hover:text-black">Edit Creative Profile</span>
+            <span className="text-sm font-label font-bold uppercase tracking-widest text-on-surface group-hover:text-black">Change My Profile</span>
             <Edit3 className="w-5 h-5 text-primary group-hover:text-black" />
           </div>
         </a>

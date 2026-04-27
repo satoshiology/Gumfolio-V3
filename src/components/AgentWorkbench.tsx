@@ -48,11 +48,11 @@ export function AgentWorkbench() {
       integrations: [
         {
           id: "optimization",
-          name: "Conversion Engine",
+          name: "Sales Engine",
           enabled: true,
           tools: [
-            { id: "landingPage", name: "Landing Page Variants", enabled: true },
-            { id: "checkout", name: "Checkout Flow", enabled: false }
+            { id: "landingPage", name: "Page Styles", enabled: true },
+            { id: "checkout", name: "Buying Steps", enabled: false }
           ]
         }
       ]
@@ -98,15 +98,15 @@ export function AgentWorkbench() {
 
   return (
     <div className="p-6 h-full flex flex-col space-y-6">
-      <h1 className="text-primary font-headline font-extrabold text-3xl">Agent Workbench</h1>
+      <h1 className="text-primary font-headline font-extrabold text-3xl">AI Workplace</h1>
       
       {!showForm ? (
         <button onClick={() => setShowForm(true)} className="flex items-center justify-center gap-2 w-full p-4 rounded-xl border border-dashed border-primary/30 text-primary font-bold hover:bg-primary/10">
-          <Plus className="w-5 h-5" /> Spawn New Agent
+          <Plus className="w-5 h-5" /> Make new AI helper
         </button>
       ) : (
         <div className="bg-surface-container rounded-2xl p-6 border border-white/10 space-y-4">
-          <h2 className="text-xl font-bold text-white">Spawn Configuration</h2>
+          <h2 className="text-xl font-bold text-white">Settings</h2>
           <input 
               className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2" 
               placeholder="Agent Name" 
@@ -157,7 +157,7 @@ export function AgentWorkbench() {
                 
                 {modalAgent.id === "2" && (
                     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
-                        <h3 className="text-white font-bold mb-2">Live A/B Test Variants (Landing Page)</h3>
+                        <h3 className="text-white font-bold mb-2">Testing different pages</h3>
                         <div className="space-y-3">
                             {[0, 1, 2].map(v => {
                                 const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '{}')[v] || 0;
@@ -166,12 +166,12 @@ export function AgentWorkbench() {
                                 return (
                                     <div key={v} className="bg-black/50 p-2 rounded border border-white/5">
                                         <div className="flex justify-between text-xs mb-1">
-                                            <span className="text-zinc-400">Variant {v}</span>
-                                            <span className="text-primary">{cr}% CR</span>
+                                            <span className="text-zinc-400">Page {v}</span>
+                                            <span className="text-primary">{cr}% Sales</span>
                                         </div>
                                         <div className="flex justify-between text-[10px] text-zinc-500">
                                             <span>{impressions} Views</span>
-                                            <span>{conversions} Conv.</span>
+                                            <span>{conversions} Buys</span>
                                         </div>
                                         <div className="w-full h-1 bg-zinc-800 rounded-full mt-2 overflow-hidden">
                                             <div className="h-full bg-primary" style={{ width: `${cr}%` }}></div>
@@ -181,7 +181,7 @@ export function AgentWorkbench() {
                             })}
                         </div>
                         <button className="w-full mt-3 p-2 bg-primary/20 text-primary text-xs font-bold rounded hover:bg-primary/30 transition-colors">
-                            Force Agent Re-Optimization
+                            Make AI try again
                         </button>
                     </div>
                 )}

@@ -32,6 +32,71 @@
 }
 
 /* ========================================================
+   LIGHT THEME: BEIGE & BROWN
+   ======================================================== */
+.light-theme {
+  --color-surface-dim: #f5f2eb;
+  --color-surface-container: #ede9df;
+  --color-surface-container-low: #e5e0d4;
+  --color-surface-container-high: #ddd6c9;
+  --color-surface-container-highest: #d5ccbe;
+  
+  --color-primary: #5d4037;
+  --color-primary-dim: #3e2723;
+  --color-secondary: #8d6e63;
+  --color-on-surface: #2c211a;
+  --color-on-surface-variant: #6d5a4e;
+}
+
+.light-theme body {
+  background-color: var(--color-surface-dim);
+  background-image: 
+    radial-gradient(at 0% 0%, #ede9df 0%, transparent 50%),
+    radial-gradient(at 100% 100%, #e5e0d4 0%, transparent 50%);
+  color: var(--color-on-surface);
+}
+
+.light-theme .glass-panel,
+.light-theme .neuro-panel,
+.light-theme .glass-card {
+  background: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 
+    4px 4px 12px rgba(93, 64, 55, 0.08), 
+    -2px -2px 8px rgba(255, 255, 255, 0.8),
+    inset 0px 0px 0px 1px rgba(93, 64, 55, 0.05) !important;
+  backdrop-filter: blur(12px);
+  border: none !important;
+}
+
+.light-theme .neuro-button {
+  background: #ede9df;
+  box-shadow: 
+    4px 4px 8px rgba(93, 64, 55, 0.1), 
+    -4px -4px 8px rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(93, 64, 55, 0.05);
+  color: var(--color-primary);
+}
+
+.light-theme .neuro-button:hover {
+  background: #e5e0d4;
+  box-shadow: 
+    6px 6px 12px rgba(93, 64, 55, 0.12), 
+    -6px -6px 12px rgba(255, 255, 255, 0.9);
+}
+
+.light-theme header,
+.light-theme nav {
+  background: rgba(245, 242, 235, 0.8) !important;
+  border-color: rgba(93, 64, 55, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(93, 64, 55, 0.05) !important;
+}
+
+.light-theme .pro-theme {
+  /* Pro theme nested within light theme should still look dark/luxury if desired, 
+     but maybe we keep it consistent. For now, let it be. */
+}
+
+/* ========================================================
    PRO THEME: LUXURY GLASSMORPHIC & NEUMORPHIC OVERHAUL
    ======================================================== */
 .pro-theme {
