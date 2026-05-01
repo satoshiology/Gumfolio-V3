@@ -105,7 +105,7 @@ export function BottomNavBar() {
     { icon: Package, label: "Products", path: "/inventory" },
     { icon: CreditCard, label: "Sales", path: "/sales" },
     { icon: Sparkles, label: "", path: "/dash-ai", isSpecial: true },
-    { icon: Users, label: "Fans", path: "/subscribers" },
+    { icon: Users, label: "SUBS", path: "/subscribers" },
     { icon: Key, label: "Licenses", path: "/licenses" },
   ];
 

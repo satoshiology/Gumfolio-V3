@@ -113,7 +113,7 @@ export default function Settings() {
         {/* Monthly Usage Card */}
         <div className="glass-card rounded-3xl p-6 border border-white/5 bg-surface-container/30">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-headline font-bold text-lg text-on-surface">Monthly Help Credits</h3>
+            <h3 className="font-headline font-bold text-lg text-on-surface">Monthly AI Chats</h3>
             <span className={cn(
               "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
               isActivated ? "bg-primary text-black" : "bg-zinc-800 text-zinc-500"

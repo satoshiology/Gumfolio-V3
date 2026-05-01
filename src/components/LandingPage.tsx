@@ -336,52 +336,34 @@ export default function LandingPage({ onAuthenticated }: LandingPageProps) {
           <h2 className="text-3xl md:text-5xl font-headline font-bold mb-4">Pick your plan</h2>
           <p className="text-on-surface-variant text-lg">Stop wasting time and start growing faster.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Starter */}
-          <div className="glass-card p-10 rounded-3xl border border-white/10 flex flex-col hover:border-primary/30 transition-all">
-            <h3 className="text-2xl font-bold mb-2">Starter</h3>
+        <div className="max-w-lg mx-auto">
+          {/* Pro Plan Only */}
+          <div className="glass-card p-10 rounded-3xl border-2 border-primary/30 bg-primary/5 flex flex-col relative overflow-hidden shadow-2xl shadow-primary/10">
+            <div className="absolute top-0 right-0 bg-primary text-black text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">Full Access</div>
+            <h3 className="text-3xl font-headline font-bold mb-2">PRO</h3>
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-headline font-bold">$9</span>
+              <span className="text-5xl font-headline font-bold">$9</span>
               <span className="text-on-surface-variant text-sm">/month</span>
             </div>
-            <p className="text-on-surface-variant text-sm mb-8">Everything you need to stop wasting time doing chores on Gumroad.</p>
-            <ul className="space-y-4 mb-10 flex-1">
-              {["Full Control Panel", "Key Management", "One-Click on/off", "Easy Charts"].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleConnect} className="w-full py-4 rounded-xl bg-white text-black font-bold hover:bg-primary transition-all">
-              Start Starter Plan
-            </button>
-          </div>
-
-          {/* Pro */}
-          <div className="glass-card p-10 rounded-3xl border-2 border-primary/30 bg-primary/5 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-primary text-black text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">Recommended</div>
-            <h3 className="text-2xl font-bold mb-2">Pro</h3>
-            <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-headline font-bold">$19</span>
-              <span className="text-on-surface-variant text-sm">/month</span>
-            </div>
-            <p className="text-on-surface-variant text-sm mb-8">Better tools + help for big creators.</p>
-            <ul className="space-y-4 mb-10 flex-1">
+            <p className="text-on-surface-variant text-sm mb-8">Everything you need to grow your store without the headache.</p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               {[
-                "Everything in Starter",
+                "Full Control Panel",
+                "Key Management",
+                "One-Click on/off",
+                "Easy Charts",
                 "Built-in AI Assistant",
                 "Auto Growing Tool",
                 "Priority Support",
                 "Custom Looks"
               ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-sm font-semibold text-white">
-                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                <li key={i} className="flex items-center gap-3 text-sm font-medium text-white">
+                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
                   {item}
                 </li>
               ))}
             </ul>
-            <button onClick={handleConnect} className="w-full py-4 rounded-xl bg-primary text-black font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
+            <button onClick={handleConnect} className="w-full py-5 rounded-2xl bg-primary text-black font-bold text-lg hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95">
               Get Pro Access
             </button>
           </div>

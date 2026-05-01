@@ -90,7 +90,7 @@ export default function Profile() {
 
       <section className="grid grid-cols-2 gap-4">
         <div className="bg-surface-container/40 backdrop-blur-xl rounded-xl p-6 border border-white/5 flex flex-col justify-between h-40">
-          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Fans</span>
+          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Subscribers</span>
           <div>
             <div className="text-4xl font-headline font-bold text-on-surface">{totalAudience.toLocaleString()}</div>
             <div className="flex items-center gap-1 text-secondary text-xs font-label">

@@ -42,7 +42,7 @@ export default function SubscribersView() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
-        <h2 className="font-headline text-3xl font-bold">Fans</h2>
+        <h2 className="font-headline text-3xl font-bold">Subscribers</h2>
         <select 
           value={selectedProductId || ""} 
           onChange={(e) => setSelectedProductId(e.target.value)}
@@ -70,7 +70,7 @@ export default function SubscribersView() {
             <div className="text-center py-10"><Loader2 className="animate-spin mx-auto w-8 h-8" /></div>
         ) : filteredSubscribers.length === 0 ? (
           <p className="text-center text-on-surface-variant py-10">
-            {searchQuery ? "No fans match your search." : "No fans found for this product."}
+            {searchQuery ? "No subscribers match your search." : "No subscribers found for this product."}
           </p>
         ) : (
           <div className="space-y-4">
